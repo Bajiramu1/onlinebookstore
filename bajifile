@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('clone') {
+            steps {
+                  git changelog: false, poll: false, url: 'https://github.com/Bajiramu1/onlinebookstore.git'
+            }
+        }
+        stage('build') {
+            steps {
+                 sh 'mvn clean package'
+            }
+        }
+        stage('deploy') {
+            steps {
+                deploy adapters: [tomcat9(credentialsId: 'e70385e4-5d58-4ade-945d-2336e9ec8703', path: '', url: 'http://3.109.184.176:8080')], contextPath: 'baji', war: '**/*.war'
+            }
+        }
+    }
+}
